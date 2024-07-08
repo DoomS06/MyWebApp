@@ -26,6 +26,7 @@ bcrypt = Bcrypt()
 #requests
 
 # hello my name jeff
+#help
 
 
 @app.route('/login/', methods=['GET', 'POST'])

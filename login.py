@@ -151,47 +151,7 @@ def register():
         # Form is empty... (no POST data)
         msg = 'Please fill out the form!'
         # Show registration form with message (if any)
-    return render_template('register.html', msg=msg)@app.route('/MyWebApp/register', methods=['GET', 'POST'])
-def register():
-    # Output message if something goes wrong...
-    msg = ''
-    # Check if "username", "password" and "email" POST requests exist (user submitted form)
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
-        # Create variables for easy access
-        username = request.form['username']
-        password = request.form['password']
-        email = request.form['email']
-
-        # key is generate
-        key = Fernet.generate_key()
-        # write bytes (wb) to file (problem - send one key for different people)
-        # with open("symmetric.key", "wb") as fo:
-        #     fo.write(key)
-        # Initialize Fernet Classkey
-        f = Fernet(key)
-
-        # convert text to bytes
-        email = email.encode()
-        # plaintext converted to ciphertext
-        encrypted_email = f.encrypt(email)
-
-        hashpwd = bcrypt.generate_password_hash(password)
-
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute(
-            'INSERT INTO accounts (username, password, email, failed_attempts, last_failed_attempt, encryption_key) VALUES (%s, %s, %s, %s, %s, %s)',
-            (username, hashpwd, encrypted_email, 0, None, key.decode())
-        )
-        mysql.connection.commit()
-        msg = 'You have successfully registered!'
-
-
-    elif request.method == 'POST':
-        # Form is empty... (no POST data)
-        msg = 'Please fill out the form!'
-        # Show registration form with message (if any)
     return render_template('register.html', msg=msg)
-
 
 # http://localhost:5000/MyWebApp/home - this will be the home page, only accessible for loggedin users
 @app.route('/MyWebApp/home')
